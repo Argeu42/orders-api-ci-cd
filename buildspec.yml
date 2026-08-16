@@ -3,6 +3,11 @@ phases:
   install:
     commands:
       - npm ci
+      # `sam build` shells out to the `esbuild` binary on the PATH (it does
+      # not use the project's local node_modules/.bin copy), so it must be
+      # installed globally in the CodeBuild environment too — same fix
+      # applied locally when running `sam build`/`sam local` in dev.
+      - npm install -g esbuild@0.28.2
   build:
     commands:
       - npm run lint
