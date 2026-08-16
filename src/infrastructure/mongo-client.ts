@@ -13,6 +13,7 @@ const DEFAULT_DB_NAME = "orders";
 // Cached across warm invocations of the same Lambda execution environment, so
 // that a new MongoClient connection is only established on a cold start.
 let cachedDb: Db | undefined;
+let cachedClient: MongoClient | undefined;
 
 /**
  * Determines the MongoDB connection URI.
@@ -54,6 +55,23 @@ export async function getDb(): Promise<Db> {
   const client = new MongoClient(uri);
   await client.connect();
 
+  cachedClient = client;
   cachedDb = client.db(dbName);
   return cachedDb;
+}
+
+/**
+ * Closes the cached MongoDB connection, if any, and clears the cache.
+ *
+ * Not used by the Lambda handlers (which rely on the connection staying
+ * open across warm invocations) — intended for test teardown, so that
+ * integration test runs terminate cleanly instead of leaving an open
+ * socket/event-loop handle behind.
+ */
+export async function closeDb(): Promise<void> {
+  if (cachedClient) {
+    await cachedClient.close();
+    cachedClient = undefined;
+    cachedDb = undefined;
+  }
 }

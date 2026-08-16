@@ -29,19 +29,19 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Assign initial status `PENDING` and `createdAt` on success; throw `ValidationError` on any violation without constructing an instance
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 10.2_
 
-  - [ ]* 4.2 Write property test for total calculation
+  - [x] 4.2 Write property test for total calculation
     - **Property 1: Cálculo do total na criação**
     - **Validates: Requirements 2.3, 2.9**
 
-  - [ ]* 4.3 Write property test for invalid customerId rejection
+  - [x] 4.3 Write property test for invalid customerId rejection
     - **Property 2: Rejeição de customerId inválido**
     - **Validates: Requirements 2.4**
 
-  - [ ]* 4.4 Write property test for empty items list rejection
+  - [x] 4.4 Write property test for empty items list rejection
     - **Property 3: Rejeição de lista de items vazia**
     - **Validates: Requirements 2.5**
 
-  - [ ]* 4.5 Write property test for invalid item rejection
+  - [x] 4.5 Write property test for invalid item rejection
     - **Property 4: Rejeição de item inválido**
     - **Validates: Requirements 2.6, 2.7, 2.8**
 
@@ -50,7 +50,7 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - `transitionTo` uses `canTransition`, throws `InvalidTransitionError` on invalid transitions, and returns a new immutable instance on success
     - _Requirements: 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 10.2_
 
-  - [ ]* 5.2 Write property test for the transition state machine
+  - [x] 5.2 Write property test for the transition state machine
     - **Property 5: Máquina de estados de transição**
     - **Validates: Requirements 3.2, 3.3, 3.4, 3.5, 3.6, 3.7**
 
@@ -70,14 +70,14 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Generate a UUID id, call `Order.create`, persist via `repo.save`, return the created Order
     - _Requirements: 10.5, 4.1_
 
-  - [ ]* 8.2 Write unit tests for `CreateOrder`
+  - [x] 8.2 Write unit tests for `CreateOrder`
     - Cover a success scenario and an error scenario using `InMemoryOrderRepository`
     - _Requirements: 11.5_
 
   - [x] 8.3 Implement `GetOrderById` in `src/application/get-order-by-id.ts`
     - _Requirements: 10.5, 5.1_
 
-  - [ ]* 8.4 Write unit tests for `GetOrderById`
+  - [x] 8.4 Write unit tests for `GetOrderById`
     - Cover found and not-found scenarios using `InMemoryOrderRepository`
     - _Requirements: 11.5_
 
@@ -86,7 +86,7 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Delegate filtering/sorting to `repo.find`
     - _Requirements: 10.5, 6.1, 6.2, 6.3, 6.4, 6.6, 6.7_
 
-  - [ ]* 9.2 Write unit tests for `ListOrders`
+  - [x] 9.2 Write unit tests for `ListOrders`
     - Cover a success scenario (with filters) and an empty-result scenario using `InMemoryOrderRepository`
     - _Requirements: 11.5_
 
@@ -94,7 +94,7 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Delegate aggregation to `repo.getStats`
     - _Requirements: 10.5, 8.1, 8.2_
 
-  - [ ]* 9.4 Write unit tests for `GetOrderStats`
+  - [x] 9.4 Write unit tests for `GetOrderStats`
     - Cover a non-empty and an empty-collection scenario using `InMemoryOrderRepository`
     - _Requirements: 11.5_
 
@@ -103,7 +103,7 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - `findById`; throw an application `NotFoundError` if null; call `order.transitionTo(next)`; persist via `repo.update`; return the updated Order
     - _Requirements: 10.5, 7.1_
 
-  - [ ]* 10.2 Write unit tests for `UpdateOrderStatus`
+  - [x] 10.2 Write unit tests for `UpdateOrderStatus`
     - Cover a valid transition scenario, a not-found scenario, and an invalid-transition scenario using `InMemoryOrderRepository`
     - _Requirements: 11.5_
 
@@ -134,7 +134,7 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Create indexes on `customerId`, on `status`, and the composite `{ customerId: 1, status: 1 }`
     - _Requirements: 9.2, 9.3, 9.5_
 
-  - [ ]* 14.3 Write integration tests for `MongoOrderRepository`
+  - [x] 14.3 Write integration tests for `MongoOrderRepository`
     - Against a dedicated test MongoDB database: cover `insertOne` (save), `findOne` (findById), `find` with combined filters, `updateOne` (update), and the `getStats` aggregation pipeline
     - Clean up created data after each test run for deterministic re-runs
     - _Requirements: 12.1, 12.2, 12.4_
@@ -147,19 +147,19 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Parse the API Gateway event body, log start, call `CreateOrder`, map `ValidationError`→400 and unexpected errors→500, log success/error, return the HTTP response
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 10.6, 16.1, 16.2, 16.3_
 
-  - [ ]* 16.2 Write property test for successful creation via handler
+  - [x] 16.2 Write property test for successful creation via handler
     - **Property 6: Criação via handler retorna 201 e persiste**
     - **Validates: Requirements 4.1**
 
-  - [ ]* 16.3 Write property test for invalid payload rejection
+  - [x] 16.3 Write property test for invalid payload rejection
     - **Property 7: Payload inválido em POST /orders é rejeitado sem persistir**
     - **Validates: Requirements 4.2, 4.3**
 
-  - [ ]* 16.4 Write property test for start/completion logging
+  - [x] 16.4 Write property test for start/completion logging
     - **Property 8: Handler de criação sempre loga início e conclusão**
     - **Validates: Requirements 4.5, 16.1, 16.2**
 
-  - [ ]* 16.5 Write unit test for persistence failure
+  - [x] 16.5 Write unit test for persistence failure
     - Simulate a repository failure and assert the handler returns HTTP 500 without returning a created Order
     - _Requirements: 4.4_
 
@@ -168,15 +168,15 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Parse and validate the `id` path parameter, call `GetOrderById`, map null→404 and malformed id→400
     - _Requirements: 5.1, 5.2, 5.3, 10.6, 16.1, 16.2, 16.3_
 
-  - [ ]* 17.2 Write property test for successful lookup by id
+  - [x] 17.2 Write property test for successful lookup by id
     - **Property 9: Consulta por id existente retorna todos os atributos**
     - **Validates: Requirements 5.1**
 
-  - [ ]* 17.3 Write property test for lookup with nonexistent id
+  - [x] 17.3 Write property test for lookup with nonexistent id
     - **Property 10: Consulta por id inexistente retorna 404**
     - **Validates: Requirements 5.2**
 
-  - [ ]* 17.4 Write property test for malformed id
+  - [x] 17.4 Write property test for malformed id
     - **Property 11: Consulta por id malformado retorna 400**
     - **Validates: Requirements 5.3**
 
@@ -185,11 +185,11 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Parse optional `customerId`/`status` query params, validate `status` against the enum, call `ListOrders`
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 10.6, 16.1, 16.3_
 
-  - [ ]* 18.2 Write property test for filtered/sorted listing
+  - [x] 18.2 Write property test for filtered/sorted listing
     - **Property 12: Listagem com filtros retorna o subconjunto correto e ordenado**
     - **Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.6, 6.7**
 
-  - [ ]* 18.3 Write property test for invalid status filter
+  - [x] 18.3 Write property test for invalid status filter
     - **Property 13: Filtro de status inválido retorna 400**
     - **Validates: Requirements 6.5**
 
@@ -198,15 +198,15 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Parse `id` path param and `status` body field, call `UpdateOrderStatus`, map `NotFoundError`→404 (checked before body validation), `ValidationError`/`InvalidTransitionError`→400
     - _Requirements: 7.1, 7.2, 7.3, 10.6, 16.1, 16.2, 16.3_
 
-  - [ ]* 19.2 Write property test for valid status update
+  - [x] 19.2 Write property test for valid status update
     - **Property 14: Atualização de status válida persiste e retorna 200**
     - **Validates: Requirements 7.1**
 
-  - [ ]* 19.3 Write property test for update on nonexistent id
+  - [x] 19.3 Write property test for update on nonexistent id
     - **Property 15: Atualização em id inexistente retorna 404 independente do corpo**
     - **Validates: Requirements 7.2**
 
-  - [ ]* 19.4 Write property test for invalid update on existing id
+  - [x] 19.4 Write property test for invalid update on existing id
     - **Property 16: Atualização inválida em id existente retorna 400 sem modificar**
     - **Validates: Requirements 7.3**
 
@@ -215,20 +215,20 @@ Este plano converte o design da Orders API em uma sequência incremental de tare
     - Call `GetOrderStats` and return the aggregated result with HTTP 200
     - _Requirements: 8.1, 8.2, 8.3, 10.6, 16.1, 16.3_
 
-  - [ ]* 20.2 Write property test for stats aggregation
+  - [x] 20.2 Write property test for stats aggregation
     - **Property 17: Estatísticas agregam corretamente por status**
     - **Validates: Requirements 8.1, 8.2**
 
-- [ ] 21. Verify cross-cutting logging and secret-failure behavior
-  - [ ]* 21.1 Write property test for error logging across handlers
+- [x] 21. Verify cross-cutting logging and secret-failure behavior
+  - [x] 21.1 Write property test for error logging across handlers
     - **Property 18: Log de erro descreve tipo e status HTTP**
     - **Validates: Requirements 16.3**
 
-  - [ ]* 21.2 Write unit test for Secrets Manager failure handling
+  - [x] 21.2 Write unit test for Secrets Manager failure handling
     - Assert the failure is logged without the credential and the handler returns an error without attempting a MongoDB connection
     - _Requirements: 15.4_
 
-  - [ ]* 21.3 Write unit test for logging failures not interrupting the response
+  - [x] 21.3 Write unit test for logging failures not interrupting the response
     - Simulate the logger throwing and assert the handler still returns its normal response
     - _Requirements: 16.5_
 
