@@ -1,0 +1,40 @@
+{
+  "name": "orders-api",
+  "version": "1.0.0",
+  "description": "Orders API - educational serverless backend with DDD, MongoDB, and AWS SAM",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:integration": "jest --testPathPattern=tests/integration --runInBand",
+    "lint": "eslint --no-error-on-unmatched-pattern \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "setup:indexes": "ts-node scripts/setup-indexes.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "3.1111.0",
+    "dotenv": "16.4.7",
+    "mongodb": "6.19.0",
+    "uuid": "11.1.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.162",
+    "@types/jest": "29.5.13",
+    "@types/node": "20.16.11",
+    "@typescript-eslint/eslint-plugin": "8.10.0",
+    "@typescript-eslint/parser": "8.10.0",
+    "esbuild": "0.28.2",
+    "eslint": "8.57.1",
+    "fast-check": "3.22.0",
+    "jest": "29.7.0",
+    "ts-jest": "29.2.5",
+    "ts-node": "10.9.2",
+    "typescript": "5.6.3"
+  },
+  "_devToolReferences": {
+    "aws-sam-cli": "AWS SAM CLI is a separate CLI tool (not an npm package) required for `sam validate`, `sam build`, `sam local`, and `sam deploy`. Install it following https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html"
+  }
+}

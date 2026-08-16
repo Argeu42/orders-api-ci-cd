@@ -1,0 +1,16 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm ci
+  build:
+    commands:
+      - npm run lint
+      - npm run typecheck
+      - npm run test:unit
+      - sam validate
+      - sam build
+      - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+artifacts:
+  files:
+    - '**/*'

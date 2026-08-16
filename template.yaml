@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Orders API - HTTP API + Lambda functions (Node.js 22.x) backed by MongoDB Atlas,
+  with connection URI stored in AWS Secrets Manager.
+
+Parameters:
+  MongoDbSecretName:
+    Type: String
+    Description: >
+      Name of the AWS Secrets Manager secret that holds the MongoDB Atlas
+      connection URI. Passed to each function as the MONGODB_SECRET_NAME
+      environment variable.
+  MongoDbSecretArn:
+    Type: String
+    Description: >
+      ARN of the AWS Secrets Manager secret that holds the MongoDB Atlas
+      connection URI. Used to scope each function's IAM policy to
+      secretsmanager:GetSecretValue on this specific secret only.
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Timeout: 10
+    MemorySize: 256
+    Environment:
+      Variables:
+        MONGODB_SECRET_NAME: !Ref MongoDbSecretName
+        # MONGODB_URI/MONGODB_DB_NAME are intentionally left empty here.
+        # In deployed environments the URI always comes from Secrets Manager
+        # (MONGODB_SECRET_NAME above). These two are declared only so that
+        # `sam local start-api/invoke --env-vars env.local.json` has a
+        # variable to override — SAM local only overrides variables that
+        # already exist in the template, it does not inject new ones.
+        MONGODB_URI: ""
+        MONGODB_DB_NAME: ""
+
+Resources:
+  OrdersHttpApi:
+    Type: AWS::Serverless::HttpApi
+
+  CreateOrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: create-order-handler.handler
+      CodeUri: src/handlers/
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoDbSecretArn
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref OrdersHttpApi
+            Path: /orders
+            Method: post
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "node22"
+        EntryPoints:
+          - create-order-handler.ts
+
+  GetOrderByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get-order-by-id-handler.handler
+      CodeUri: src/handlers/
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoDbSecretArn
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref OrdersHttpApi
+            Path: /orders/{id}
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "node22"
+        EntryPoints:
+          - get-order-by-id-handler.ts
+
+  ListOrdersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: list-orders-handler.handler
+      CodeUri: src/handlers/
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoDbSecretArn
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref OrdersHttpApi
+            Path: /orders
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "node22"
+        EntryPoints:
+          - list-orders-handler.ts
+
+  UpdateOrderStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: update-order-status-handler.handler
+      CodeUri: src/handlers/
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoDbSecretArn
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref OrdersHttpApi
+            Path: /orders/{id}/status
+            Method: patch
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "node22"
+        EntryPoints:
+          - update-order-status-handler.ts
+
+  GetOrderStatsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: get-order-stats-handler.handler
+      CodeUri: src/handlers/
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoDbSecretArn
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref OrdersHttpApi
+            Path: /orders/stats
+            Method: get
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "node22"
+        EntryPoints:
+          - get-order-stats-handler.ts
+
+Outputs:
+  OrdersApiEndpoint:
+    Description: Base URL of the Orders HTTP API
+    Value: !Sub "https://${OrdersHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
