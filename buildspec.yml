@@ -15,7 +15,16 @@ phases:
       - npm run test:unit
       - sam validate
       - sam build
-      - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+      - >-
+        sam deploy
+        --stack-name orders-api
+        --resolve-s3
+        --capabilities CAPABILITY_IAM
+        --no-confirm-changeset
+        --no-fail-on-empty-changeset
+        --parameter-overrides
+        ParameterKey=MongoDbSecretName,ParameterValue=orders-api/mongodb-uri
+        ParameterKey=MongoDbSecretArn,ParameterValue=arn:aws:secretsmanager:us-east-1:881490110579:secret:orders-api/mongodb-uri-6KKDde
 artifacts:
   files:
     - '**/*'
